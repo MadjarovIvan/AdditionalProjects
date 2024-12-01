@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
-        <title>Signin Template · Bootstrap v5.3</title>
+        <title>Sign Up - <?=APP_NAME?></title>
 
         <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
 

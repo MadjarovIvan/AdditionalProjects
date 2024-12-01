@@ -1,5 +1,7 @@
 <?php 
-define("ROOT", 'http://localhost:8888/AdditionalProjects/Blog/public');
+require "../app/core/init.php";
+// echo "<pre>";
+// print_r($_SERVER);
 
 $url = $_GET['url'] ?? 'home';
 $url = explode("/", $url);

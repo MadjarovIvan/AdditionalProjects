@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.122.0">
-    <title>Admin - My Blog</title>
+    <title>Admin - <?=APP_NAME?></title>
 
 <link href="./assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
