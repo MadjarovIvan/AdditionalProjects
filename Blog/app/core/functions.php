@@ -1,11 +1,31 @@
 <?php 
-// create_tables();
+function authenticate($row){
+    $_SESSION['USER'] = $row[0];
+}
 
+function logged_in(){
+    if (!empty($_SESSION['USER'])) {
+        return true;
+    }
+    return false;
+}
+
+function str_to_url($url){
+    $url = str_replace("'", "", $url);
+    $url = preg_replace('~[^\\pL0-9_]+~u', '-', $url);
+    $url = trim($url, "-");
+    $url = iconv("UTF-8", "us-ascii//TRANSLIT", $url);
+    $url = strtolower($url);
+    $url = preg_replace('~[^-a-z0-9_]+~', '', $url);
+
+    return $url;
+}
+
+// create_tables();
 function query(string $query, array $data = []){
     $string = "mysql:hostname=". DBHOST .";dbname=". DBNAME;
     $con = new PDO ($string, DBUSER, DBPASS);
 
-    $query = "SELECT * FROM users WHERE id = :id ";
     $stm = $con->prepare($query);
     $stm->execute($data);
 
@@ -16,6 +36,19 @@ function query(string $query, array $data = []){
     }
     return false;
 }   
+
+function redirect($page){
+    header('Location: '.$page);
+    die();
+}
+
+function old_value($key){
+    
+    if (!empty($_POST[$key])){
+        return $_POST[$key];
+    }
+    return "";
+}
 
 function create_tables(){
     $string = "mysql:host=". DBHOST .";";
