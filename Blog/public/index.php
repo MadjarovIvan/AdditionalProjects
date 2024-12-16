@@ -5,6 +5,7 @@ require "../app/core/init.php";
 // print_r($_SERVER);
 
 $url = $_GET['url'] ?? 'home';
+$str = strtolower($url);
 $url = explode("/", $url);
 
 $page_name = trim($url[0]);

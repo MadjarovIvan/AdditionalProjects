@@ -1,13 +1,49 @@
+<?php 
+
+if(!logged_in())
+{
+  redirect('login');
+}
+        
+  $section = $url[1] ?? 'dashboard';
+  $action  = $url[2] ?? 'view';
+  $id      = $url[3] ?? null;
+
+  // echo "<pre>";
+  // print_r($url);
+  // echo "</pre>";
+  // print_r($action);
+  // echo "</pre>";
+  // print_r($id);
+  // die();
+
+  $filename = "../app/pages/admin/".$section.".php";
+  if(!file_exists($filename))
+  {
+    $filename = "../app/pages/404.php";
+  }
+
+  if ($section == 'users') 
+  {
+    require_once  "../app/pages/admin/users-controller.php";
+  } else if ($section == 'categories') 
+  {
+    require_once "../app/pages/admin/categories-controller.php";
+  } else if ($section == 'posts') 
+  {
+    require_once "../app/pages/admin/posts-controller.php";
+  }
+?>
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
-  <head><script src="../assets/js/color-modes.js"></script>
+  <head><script src="<?=ROOT?>/assets/js/color-modes.js"></script>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.122.0">
     <title>Admin - <?=APP_NAME?></title>
 
-<link href="./assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="<?=ROOT?>/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
       .bd-placeholder-img {
@@ -90,9 +126,9 @@
 
     
     <!-- Custom styles for this template -->
-    <link href="./assets/css/bootstrap-icons.css" rel="stylesheet">
+    <link href="<?=ROOT?>/assets/css/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="./assets/css/dashboard.css" rel="stylesheet">
+    <link href="<?=ROOT?>/assets/css/dashboard.css" rel="stylesheet">
   </head>
   <body>
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -220,10 +256,28 @@
         </div>
         <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
           <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="<?=ROOT?>/admin">
-                <svg class="bi"><use xlink:href="#house-fill"/></svg>
+          <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="<?=ROOT?>/admin/dashboard">
+              <i class="bi bi-house-fill"></i>
                 Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="<?=ROOT?>/admin/users">
+              <i class="bi bi-person-fill"></i>
+                Users
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="<?=ROOT?>/admin/categories">
+              <i class="bi bi-tags"></i>
+                Categories
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="<?=ROOT?>/admin/posts">
+              <i class="bi bi-file-post"></i>
+                Posts
               </a>
             </li>
           </ul>
@@ -278,15 +332,20 @@
           </button>
         </div>
       </div>
-        content area
+
+      <?php 
+      
+      require_once($filename);
+      
+      ?>
     </main>
   </div>
 </div>
-<script src="./assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script>
+<script src="<?ROOT?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script> -->
 
 
-<script src="./assets/js/dashboard.js"></script>
+<script src="<?ROOT?>/assets/js/dashboard.js"></script>
 
 </body>
 </html>

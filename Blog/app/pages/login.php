@@ -7,11 +7,9 @@
         $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
         $row = query($query, ['email' => $_POST['email']]);
         
-        
         if ($row) {
             $data = [];
             if (password_verify($_POST['password'], $row[0]['password'])) {
-                //grant access
                 authenticate($row[0]);
                 redirect('admin');
             } else {

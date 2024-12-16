@@ -1,6 +1,13 @@
 <?php 
 function authenticate($row){
-    $_SESSION['USER'] = $row[0];
+    // echo "<pre>";
+    // print_r($row);
+    // die();
+    $_SESSION['USER'] = $row;
+}
+
+function esc($str) {
+    return htmlspecialchars($str ?? '');
 }
 
 function logged_in(){
@@ -21,6 +28,15 @@ function str_to_url($url){
     return $url;
 }
 
+function get_image($file){
+    $file = $file ?? '';
+    if (file_exists($file)) {
+        return ROOT.'/'.$file;
+    }
+
+    return ROOT.'/assets/images/no-image.jpg';
+}
+
 // create_tables();
 function query(string $query, array $data = []){
     $string = "mysql:hostname=". DBHOST .";dbname=". DBNAME;
@@ -35,19 +51,35 @@ function query(string $query, array $data = []){
         return $result;
     }
     return false;
-}   
-
-function redirect($page){
-    header('Location: '.$page);
-    die();
 }
 
-function old_value($key){
+function query_row(string $query, array $data = []){
+    $string = "mysql:hostname=". DBHOST .";dbname=". DBNAME;
+    $con = new PDO ($string, DBUSER, DBPASS);
+
+    $stm = $con->prepare($query);
+    $stm->execute($data);
+
+    $result = $stm->fetchAll(PDO::FETCH_ASSOC);
+    if (is_array($result) && !empty($result)) {
+        // echo "<pre>";
+        // print_r($result[0]);
+        // die();
+        return $result[0];
+    }
+    return false;
+}
+
+function redirect($page){
+    header('Location: '. ROOT .'/'.$page);
+}
+
+function old_value($key, $default = ''){
     
     if (!empty($_POST[$key])){
         return $_POST[$key];
     }
-    return "";
+    return $default;
 }
 
 function create_tables(){
