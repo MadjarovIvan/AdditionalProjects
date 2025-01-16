@@ -31,17 +31,6 @@ if($action == 'add')
             $errors['password'] = "Passwords do not match";
         }
 
-        $allowed = ['image/jpeg', 'image/png','image/webp'];
-        if(!empty($_FILES['image']['name'])){
-            $destination = "";
-            if(in_array($_FILES['image']['type'], $allowed)){
-                $errors['image'] = "Image format not supported";
-            } else
-            {
-                $destination = $folder . time() . $_FILES['image']['name'];
-                move_uploaded_file(['image']['tmp_name'], $destination);
-            }
-        }
         //INSERT IN TO DATABASE
         if (empty($errors)) {
             $data = [];
@@ -89,6 +78,22 @@ if($row)
     // else if ($_POST['password'] !== $_POST['retype_password']) {
     //   $errors['password'] = "Passwords do not match";
     // }
+
+    $allowed = ['image/jpeg', 'image/png','image/webp'];
+    if(!empty($_FILES['image']['name'])){
+        $destination = "";
+        if(in_array($_FILES['image']['type'], $allowed)){
+            $errors['image'] = "Image format not supported";
+        } else
+        {
+            $folder = "uploads/";
+            if(!file_exists($folder)){
+                mkdir($folder, 077, true);
+            }
+            $destination = $folder . time() . $_FILES['image']['name'];
+            move_uploaded_file(['image']['tmp_name'], $destination); 
+        }
+    }
     //INSERT IN TO DATABASE
     if (empty($errors)) {
         $data = [];

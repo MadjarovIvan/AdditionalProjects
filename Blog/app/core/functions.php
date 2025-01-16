@@ -1,23 +1,27 @@
 <?php 
-function authenticate($row){
+function authenticate($row)
+{
     // echo "<pre>";
     // print_r($row);
     // die();
     $_SESSION['USER'] = $row;
 }
 
-function esc($str) {
+function esc($str) 
+{
     return htmlspecialchars($str ?? '');
 }
 
-function logged_in(){
+function logged_in()
+{
     if (!empty($_SESSION['USER'])) {
         return true;
     }
     return false;
 }
 
-function str_to_url($url){
+function str_to_url($url)
+{
     $url = str_replace("'", "", $url);
     $url = preg_replace('~[^\\pL0-9_]+~u', '-', $url);
     $url = trim($url, "-");
@@ -28,7 +32,8 @@ function str_to_url($url){
     return $url;
 }
 
-function get_image($file){
+function get_image($file)
+{
     $file = $file ?? '';
     if (file_exists($file)) {
         return ROOT.'/'.$file;
@@ -37,8 +42,49 @@ function get_image($file){
     return ROOT.'/assets/images/no-image.jpg';
 }
 
+function get_pagination_vars()
+{
+    $page_number = $_GET['page'] ?? 1;
+    $page_number = empty($page_number) ? 1 : (int)$page_number;
+    $page_number = $page_number < 1 ? 1 : $page_number;
+
+    $current_link = $_GET['url'] ?? 'home';
+    $current_link = ROOT . '/' . $current_link;
+    $query_string = '';
+
+    foreach ($_GET as $key => $value) {
+        if ($key != 'url') {
+            $query_string .= '&' .$key.'='.$value;
+        }
+    }
+
+    $query_string = trim($query_string, '&');
+    if (!strstr($query_string, 'page=')) {
+        $query_string .= "&page=" . $page_number;
+    }
+
+    $query_string = trim($query_string, '&');
+    $current_link .= "?".$query_string;
+
+    $current_link = preg_replace("/page=.*/", "page=".$page_number, $current_link);
+    $next_link = preg_replace("/page=.*/", "page=".($page_number+1), $current_link);
+    $first_link = preg_replace("/page=.*/", "page=1", $current_link);
+    $prev_page_number = $page_number < 2 ? 1 : $page_number - 1;
+    $prev_link = preg_replace("/page=.*/", "page=".$prev_page_number, $current_link);
+
+    $result = [
+        'current_link'  => $current_link,
+        'next_link'     => $next_link,
+        'prev_link'     => $prev_link,
+        'first_link'    => $first_link,
+        'page_number'    => $page_number,
+    ];
+    return $result;
+}
+
 // create_tables();
-function query(string $query, array $data = []){
+function query(string $query, array $data = [])
+{
     $string = "mysql:hostname=". DBHOST .";dbname=". DBNAME;
     $con = new PDO ($string, DBUSER, DBPASS);
 
@@ -53,7 +99,8 @@ function query(string $query, array $data = []){
     return false;
 }
 
-function query_row(string $query, array $data = []){
+function query_row(string $query, array $data = [])
+{
     $string = "mysql:hostname=". DBHOST .";dbname=". DBNAME;
     $con = new PDO ($string, DBUSER, DBPASS);
 
@@ -70,11 +117,13 @@ function query_row(string $query, array $data = []){
     return false;
 }
 
-function redirect($page){
+function redirect($page)
+{
     header('Location: '. ROOT .'/'.$page);
 }
 
-function old_value($key, $default = ''){
+function old_value($key, $default = '')
+{
     
     if (!empty($_POST[$key])){
         return $_POST[$key];
@@ -82,7 +131,8 @@ function old_value($key, $default = ''){
     return $default;
 }
 
-function create_tables(){
+function create_tables()
+{
     $string = "mysql:host=". DBHOST .";";
     $con =  new PDO($string, DBUSER, DBPASS);
     //DATABASE
@@ -153,4 +203,77 @@ function create_tables(){
     $stm->execute();
     
     print_r($con);
+}
+
+function resize_image($filename, $max_size = 1000)
+{
+    // $filename = 'uploads/'.$filename;
+    if(file_exists($filename))
+    {
+        $type = mime_content_type($filename);
+        switch ($type) {
+            case 'image/jpeg':
+                $image = imagecreatefromjpeg($filename);
+                break;
+            case 'image/png':
+                $image = imagecreatefrompng($filename);
+                break;
+            case 'image/gif':
+                $image = imagecreatefromgif($filename);
+                break;
+            case 'image/webp':
+                $image = imagecreatefromwebp($filename);
+                break;
+            default:
+                return;
+                break;
+        }
+
+        $src_width = imagesx($image);
+        $src_height = imagesy($image);
+
+        if($src_width > $src_height)
+        {
+            if($src_width < $max_size)
+            {
+                $max_size = $src_width;
+            }
+            $dst_width = $max_size;
+            $dst_height = ($src_height / $src_width) * $max_size;
+        }else{
+            if($src_height < $max_size)
+            {
+                $max_size = $src_height;
+            }
+            $dst_height = $max_size;
+            $dst_width = ($src_width / $src_height) * $max_size;
+        }
+
+        $dst_height = round($dst_height);
+        $dst_width = round($dst_width);
+
+        $dst_image = imagecreatetruecolor($dst_width, $dst_height);
+        imagecopyresampled($dst_image, $image, 0, 0, 0, 0, $dst_width, $dst_height, $src_width, $src_height);
+
+        switch ($type) {
+            case 'image/jpeg':
+                imagejpeg($dst_image, $filename, 90);
+                break;
+            case 'image/png':
+                imagepng($dst_image, $filename, 90);
+                break;
+            case 'image/gif':
+                imagegif($dst_image, $filename, 90);
+                break;
+            case 'image/webp':
+                imagewebp($dst_image, $filename, 90);
+                break;
+            default:
+                return;
+                break;
+        }
+
+        imagejpeg($dst_image, $filename, 90);
+        // echo $type;
+    }
 }
