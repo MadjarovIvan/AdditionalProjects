@@ -9,14 +9,6 @@ if(!logged_in())
   $action  = $url[2] ?? 'view';
   $id      = $url[3] ?? null;
 
-  // echo "<pre>";
-  // print_r($url);
-  // echo "</pre>";
-  // print_r($action);
-  // echo "</pre>";
-  // print_r($id);
-  // die();
-
   $filename = "../app/pages/admin/".$section.".php";
   if(!file_exists($filename))
   {
@@ -96,31 +88,6 @@ if(!logged_in())
         text-align: center;
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
-      }
-
-      .btn-bd-primary {
-        --bd-violet-bg: #712cf9;
-        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
-
-        --bs-btn-font-weight: 600;
-        --bs-btn-color: var(--bs-white);
-        --bs-btn-bg: var(--bd-violet-bg);
-        --bs-btn-border-color: var(--bd-violet-bg);
-        --bs-btn-hover-color: var(--bs-white);
-        --bs-btn-hover-bg: #6528e0;
-        --bs-btn-hover-border-color: #6528e0;
-        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-        --bs-btn-active-color: var(--bs-btn-hover-color);
-        --bs-btn-active-bg: #5a23c8;
-        --bs-btn-active-border-color: #5a23c8;
-      }
-
-      .bd-mode-toggle {
-        z-index: 1500;
-      }
-
-      .bd-mode-toggle .dropdown-menu .active .bi {
-        display: block !important;
       }
     </style>
 
@@ -257,25 +224,25 @@ if(!logged_in())
         <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
           <ul class="nav flex-column">
           <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="<?=ROOT?>/admin/dashboard">
+              <a class="nav-link d-flex align-items-center gap-2 <?=$section == 'dashboard' ? 'active' : ''?>" aria-current="page" href="<?=ROOT?>/admin/dashboard">
               <i class="bi bi-house-fill"></i>
                 Dashboard
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="<?=ROOT?>/admin/users">
+              <a class="nav-link d-flex align-items-center gap-2 <?=$section == 'users' ? 'active' : ''?>" aria-current="page" href="<?=ROOT?>/admin/users">
               <i class="bi bi-person-fill"></i>
                 Users
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="<?=ROOT?>/admin/categories">
+              <a class="nav-link d-flex align-items-center gap-2 <?=$section == 'categories' ? 'active' : ''?>" aria-current="page" href="<?=ROOT?>/admin/categories">
               <i class="bi bi-tags"></i>
                 Categories
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="<?=ROOT?>/admin/posts">
+              <a class="nav-link d-flex align-items-center gap-2 <?=$section == 'posts' ? 'active' : ''?>" aria-current="page" href="<?=ROOT?>/admin/posts">
               <i class="bi bi-file-post"></i>
                 Posts
               </a>

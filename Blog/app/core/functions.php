@@ -1,10 +1,17 @@
 <?php 
 function authenticate($row)
 {
-    // echo "<pre>";
-    // print_r($row);
-    // die();
     $_SESSION['USER'] = $row;
+}
+
+function user($key = '')
+{
+    if(empty($key))
+        return $_SESSION['USER'];
+    if(!empty($_SESSION['USER'][$key]))
+        return $_SESSION['USER'][$key];
+    
+    return '';
 }
 
 function esc($str) 
@@ -129,6 +136,17 @@ function old_value($key, $default = '')
         return $_POST[$key];
     }
     return $default;
+}
+
+function old_select($key, $value, $default = '')
+{
+	if(!empty($_POST[$key]) && $_POST[$key] == $value)
+		return " selected ";
+	
+	if($default == $value)
+		return " selected ";
+	
+	return "";
 }
 
 function create_tables()
