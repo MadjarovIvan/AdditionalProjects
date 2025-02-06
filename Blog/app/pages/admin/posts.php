@@ -91,13 +91,13 @@
                 <?php if (!empty($errors['title'])) :?>
                     <div class="text-danger"><?= $errors['title'] ?></div>
                 <?php endif ?>
-                <div class="form-floating my-2">
-                    <input value="<?= old_value('content', $row['content'])?>" name="content" type="text" class="form-control" id="content" placeholder="name@example.com">
-                    <label for="content">Content</label>
-                </div>
-                <?php if (!empty($errors['content'])) :?>
-                    <div class="text-danger"><?= $errors['content'] ?></div>
-                <?php endif ?>
+                <div class="my-2">
+                <textarea rows="8" name="content" type="content" class="form-control" id="content" placeholder="Post content"><?= old_value('content')?></textarea>
+                
+            </div>
+            <?php if (!empty($errors['content'])) :?>
+                <div class="text-danger"><?= $errors['content'] ?></div>
+            <?php endif ?>
                 <div class="form-floating my-2">
                     <select name="category_id" id="category_id" class="form-select">
                         <?php
